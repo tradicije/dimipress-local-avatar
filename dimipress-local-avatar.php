@@ -2,8 +2,8 @@
 /**
  * Plugin Name: DimiPress Local Avatar
  * Description: Lets users choose a local Media Library image as their WordPress profile avatar.
- * Plugin URI: https://dimitrium.org/en/software/dimipress-local-avatar
- * Version: 1.3.2
+ * Plugin URI: https://dimitrium.org/en/dimipress/local-avatar
+ * Version: 1.3.3
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Author: Aleksa Dimitrijević
@@ -17,7 +17,7 @@
 defined( 'ABSPATH' ) || exit;
 
 final class Dimipress_Local_Avatar {
-	const VERSION = '1.3.2';
+	const VERSION = '1.3.3';
 	const META_KEY = '_dimipress_local_avatar_id';
 	const SOURCE_META_KEY = '_dimipress_avatar_source';
 
@@ -72,16 +72,16 @@ final class Dimipress_Local_Avatar {
 			<input type="hidden" id="dimipress_local_avatar_id" name="dimipress_local_avatar_id" value="<?php echo esc_attr( $attachment_id ); ?>">
 			<input type="hidden" id="dimipress_avatar_source" name="dimipress_avatar_source" value="<?php echo esc_attr( $source ); ?>">
 			<div class="dimipress-local-avatar-options">
-				<div class="dimipress-local-avatar-option" data-avatar-source="gravatar">
+				<button type="button" class="dimipress-local-avatar-option" data-avatar-source="gravatar" aria-pressed="<?php echo esc_attr( 'gravatar' === $source ? 'true' : 'false' ); ?>">
 					<img src="<?php echo esc_url( $gravatar_url ); ?>" alt="" width="96" height="96">
-				</div>
-				<div class="dimipress-local-avatar-option dimipress-local-avatar-local" data-avatar-source="local">
+				</button>
+				<button type="button" class="dimipress-local-avatar-option dimipress-local-avatar-local" data-avatar-source="local" aria-pressed="<?php echo esc_attr( 'local' === $source ? 'true' : 'false' ); ?>">
 				<?php if ( $image_url ) : ?>
 					<img src="<?php echo esc_url( $image_url ); ?>" alt="" width="96" height="96">
 				<?php else : ?>
 					<span class="dimipress-local-avatar-empty" aria-hidden="true">+</span>
 				<?php endif; ?>
-			</div>
+				</button>
 			</div>
 			<label class="dimipress-local-avatar-switch" for="dimipress_avatar_toggle">
 				<span><?php esc_html_e( 'Gravatar', 'dimipress-local-avatar' ); ?></span>
@@ -93,7 +93,7 @@ final class Dimipress_Local_Avatar {
 				<button type="button" class="button dimipress-local-avatar-select"><?php esc_html_e( 'Choose local image', 'dimipress-local-avatar' ); ?></button>
 				<button type="button" class="button dimipress-local-avatar-remove" <?php disabled( ! $attachment_id ); ?>><?php esc_html_e( 'Remove saved local image', 'dimipress-local-avatar' ); ?></button>
 			</div>
-			<p class="description"><?php esc_html_e( 'You can switch back to Gravatar at any time. If no local image is selected, WordPress uses Gravatar normally.', 'dimipress-local-avatar' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Switch between Gravatar and your local image at any time. Your local image remains saved when Gravatar is selected.', 'dimipress-local-avatar' ); ?></p>
 		</div><p class="description">
 		<?php
 		return ob_get_clean();

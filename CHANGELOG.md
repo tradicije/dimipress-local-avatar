@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented here.
 
+## 1.3.3 - 2026-09-14
+
+- Confirmed compatibility with WordPress 7.1 and PHP 8.3.
+- Updated the plugin homepage URL.
+
 ## 1.3.2 - 2026-09-14
 
 - Updated the Gravatar preview to use Gravatar's current SHA-256 email-hash format.

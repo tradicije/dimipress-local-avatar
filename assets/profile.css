@@ -1,7 +1,8 @@
 .user-profile-picture > td > img.avatar { display: none; }
 .dimipress-local-avatar-controls { width: 232px; }
 .dimipress-local-avatar-options { display: flex; gap: 28px; margin-bottom: 14px; }
-.dimipress-local-avatar-option { cursor: pointer; }
+.dimipress-local-avatar-option { background: transparent; border: 0; cursor: pointer; padding: 0; }
+.dimipress-local-avatar-option:focus-visible { border-radius: 50%; outline: 2px solid #2271b1; outline-offset: 3px; }
 .dimipress-local-avatar-option img, .dimipress-local-avatar-empty { background: #f0f0f1; border: 3px solid transparent; border-radius: 50%; height: 96px; object-fit: cover; width: 96px; }
 .dimipress-local-avatar-empty { align-items: center; border-style: dashed; display: flex; font-size: 38px; font-weight: 300; justify-content: center; }
 .dimipress-local-avatar-option.is-selected { color: #2271b1; }

@@ -13,8 +13,11 @@
 			source.val(value);
 			toggle.prop('checked', value === 'local');
 			$('.dimipress-local-avatar-switch').toggleClass('is-local', value === 'local');
-			$('.dimipress-local-avatar-option').removeClass('is-selected');
-			$('.dimipress-local-avatar-option[data-avatar-source="' + value + '"]').addClass('is-selected');
+			$('.dimipress-local-avatar-option').each(function () {
+				var option = $(this);
+				var selected = option.data('avatar-source') === value;
+				option.toggleClass('is-selected', selected).attr('aria-pressed', selected ? 'true' : 'false');
+			});
 		}
 
 		setSource(source.val());

@@ -2,9 +2,9 @@
 Contributors: dimipress
 Tags: avatar, profile, user profile, media library, gravatar
 Requires at least: 6.4
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: AGPLv3 or later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -53,6 +53,10 @@ The Profile Picture control shows a Gravatar preview. That preview requests the 
 For questions, feedback, and contributions, contact <a href="https://github.com/tradicije">Aleksa Dimitrijević on GitHub</a> or email <a href="mailto:aleksa@linux.com">aleksa@linux.com</a>.
 
 == Changelog ==
+
+= 1.3.3 =
+* Tested with WordPress 7.1.
+* Updated the plugin homepage URL.
 
 = 1.3.2 =
 * Updated the Gravatar preview to use SHA-256 email hashes.
