@@ -4,7 +4,7 @@ Tags: avatar, profile, user profile, media library, gravatar
 Requires at least: 6.4
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: AGPLv3 or later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -46,13 +46,16 @@ No. Users without a chosen local avatar continue using WordPress's normal avatar
 
 Local-avatar settings are stored as WordPress user metadata: the selected Media Library attachment ID and the preferred avatar source. The plugin does not collect analytics or send this data to a service.
 
-The Profile Picture control shows a Gravatar preview. That preview requests the user's Gravatar image using the standard MD5 hash of their email address, as WordPress normally does when Gravatar is used. Choosing a local image makes WordPress use the local Media Library attachment wherever it displays that user's avatar.
+The Profile Picture control shows a Gravatar preview. That preview requests the user's Gravatar image using the standard SHA-256 hash of their email address, as Gravatar specifies. Choosing a local image makes WordPress use the local Media Library attachment wherever it displays that user's avatar.
 
 == Support ==
 
 For questions, feedback, and contributions, contact <a href="https://github.com/tradicije">Aleksa Dimitrijević on GitHub</a> or email <a href="mailto:aleksa@linux.com">aleksa@linux.com</a>.
 
 == Changelog ==
+
+= 1.3.2 =
+* Updated the Gravatar preview to use SHA-256 email hashes.
 
 = 1.3.1 =
 * Added complete plugin metadata and public project documentation.

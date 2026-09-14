@@ -3,7 +3,7 @@
  * Plugin Name: DimiPress Local Avatar
  * Description: Lets users choose a local Media Library image as their WordPress profile avatar.
  * Plugin URI: https://dimitrium.org/en/software/dimipress-local-avatar
- * Version: 1.3.1
+ * Version: 1.3.2
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Author: Aleksa Dimitrijević
@@ -17,7 +17,7 @@
 defined( 'ABSPATH' ) || exit;
 
 final class Dimipress_Local_Avatar {
-	const VERSION = '1.3.1';
+	const VERSION = '1.3.2';
 	const META_KEY = '_dimipress_local_avatar_id';
 	const SOURCE_META_KEY = '_dimipress_avatar_source';
 
@@ -64,7 +64,8 @@ final class Dimipress_Local_Avatar {
 		$attachment_id = (int) get_user_meta( $user->ID, self::META_KEY, true );
 		$image_url     = $attachment_id ? wp_get_attachment_image_url( $attachment_id, 'thumbnail' ) : '';
 		$source        = $this->avatar_source( $user->ID );
-		$gravatar_url  = 'https://www.gravatar.com/avatar/' . md5( strtolower( trim( $user->user_email ) ) ) . '?s=96&d=mp';
+		$gravatar_hash = hash( 'sha256', strtolower( trim( $user->user_email ) ) );
+		$gravatar_url  = 'https://www.gravatar.com/avatar/' . $gravatar_hash . '?s=96&d=mp';
 		ob_start();
 		?>
 		</p><div class="dimipress-local-avatar-controls">

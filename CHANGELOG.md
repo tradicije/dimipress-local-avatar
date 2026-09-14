@@ -2,6 +2,10 @@
 
 All notable changes to this project are documented here.
 
+## 1.3.2 - 2026-09-14
+
+- Updated the Gravatar preview to use Gravatar's current SHA-256 email-hash format.
+
 ## 1.3.1 - 2026-09-14
 
 - Added plugin author, homepage, license, and translation metadata.
