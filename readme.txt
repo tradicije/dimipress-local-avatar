@@ -42,11 +42,21 @@ No. It only removes the user's avatar setting. The Media Library attachment is u
 
 No. Users without a chosen local avatar continue using WordPress's normal avatar behavior.
 
+== Privacy ==
+
+Local-avatar settings are stored as WordPress user metadata: the selected Media Library attachment ID and the preferred avatar source. The plugin does not collect analytics or send this data to a service.
+
+The Profile Picture control shows a Gravatar preview. That preview requests the user's Gravatar image using the standard MD5 hash of their email address, as WordPress normally does when Gravatar is used. Choosing a local image makes WordPress use the local Media Library attachment wherever it displays that user's avatar.
+
 == Support ==
 
 For questions, feedback, and contributions, contact <a href="https://github.com/tradicije">Aleksa Dimitrijević on GitHub</a> or email <a href="mailto:aleksa@linux.com">aleksa@linux.com</a>.
 
 == Changelog ==
+
+= 1.3.1 =
+* Added complete plugin metadata and public project documentation.
+* Improved attachment permission validation and profile-picture controls.
 
 = 1.3.0 =
 * Validated that a user can edit a selected Media Library attachment before saving it as an avatar.
