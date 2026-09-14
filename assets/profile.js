@@ -8,6 +8,9 @@
 		var toggle = $('#dimipress_avatar_toggle');
 		var preview = $('.dimipress-local-avatar-local');
 		var remove = $('.dimipress-local-avatar-remove');
+		var status = $('#dimipress_local_avatar_status');
+		var actions = $('.dimipress-local-avatar-actions');
+		var description = actions.nextAll('.description').first();
 
 		function setSource(value) {
 			source.val(value);
@@ -20,11 +23,15 @@
 			});
 		}
 
-		setSource(source.val());
-		toggle.on('change', function () { setSource(this.checked ? 'local' : 'gravatar'); });
-		$('.dimipress-local-avatar-option').on('click', function () { setSource($(this).data('avatar-source')); });
+		function announce(message) {
+			status.text(message);
+		}
 
-		$('.dimipress-local-avatar-select').on('click', function () {
+		function alignDescription() {
+			description.width(actions.outerWidth());
+		}
+
+		function openMediaPicker() {
 			if (frame) {
 				frame.open();
 				return;
@@ -42,8 +49,25 @@
 				setSource('local');
 				preview.html($('<img>', { src: url, alt: '', width: 96, height: 96 }));
 				remove.prop('disabled', false);
+				announce(dimipressLocalAvatar.localSelected);
 			});
 			frame.open();
+		}
+
+		alignDescription();
+		setSource(source.val());
+		toggle.on('change', function () { setSource(this.checked ? 'local' : 'gravatar'); });
+		$('.dimipress-local-avatar-option').on('click', function () {
+			var avatarSource = $(this).data('avatar-source');
+			if (avatarSource === 'local' && !parseInt(input.val(), 10)) {
+				openMediaPicker();
+				return;
+			}
+			setSource(avatarSource);
+		});
+
+		$('.dimipress-local-avatar-select').on('click', function () {
+			openMediaPicker();
 		});
 
 		remove.on('click', function () {
@@ -51,6 +75,7 @@
 			setSource('gravatar');
 			preview.empty();
 			remove.prop('disabled', true);
+			announce(dimipressLocalAvatar.localRemoved);
 		});
 	});
 }(jQuery));

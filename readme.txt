@@ -4,7 +4,7 @@ Tags: avatar, profile, user profile, media library, gravatar
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: AGPLv3 or later
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -12,7 +12,7 @@ Choose a local Media Library image as a WordPress user's profile avatar.
 
 == Description ==
 
-DimiPress Local Avatar lets a user, or an administrator editing that user, choose an image from the WordPress Media Library on the profile screen. The selected image is used wherever WordPress calls `get_avatar()`, replacing the external Gravatar image for that user.
+DimiPress Local Avatar lets a user, or an administrator editing that user, choose an image from the WordPress Media Library on the profile screen. The selected image is used wherever WordPress calls `get_avatar()`, including REST API `avatar_urls`, replacing the external Gravatar image for that user.
 
 The controls appear directly in the built-in Profile Picture section. Users can explicitly switch between Gravatar and a local image at any time. The plugin has no service, theme, or site-specific dependency. Images stay in the normal Media Library and remain there if an avatar is removed or the plugin is deleted.
 
@@ -42,6 +42,10 @@ No. It only removes the user's avatar setting. The Media Library attachment is u
 
 No. Users without a chosen local avatar continue using WordPress's normal avatar behavior.
 
+= Does it work with the WordPress REST API? =
+
+Yes. Local avatars are returned through the standard `avatar_urls` field in WordPress user REST responses when Local is selected.
+
 == Privacy ==
 
 Local-avatar settings are stored as WordPress user metadata: the selected Media Library attachment ID and the preferred avatar source. The plugin does not collect analytics or send this data to a service.
@@ -53,6 +57,12 @@ The Profile Picture control shows a Gravatar preview. That preview requests the 
 For questions, feedback, and contributions, contact <a href="https://github.com/tradicije">Aleksa Dimitrijević on GitHub</a> or email <a href="mailto:aleksa@linux.com">aleksa@linux.com</a>.
 
 == Changelog ==
+
+= 1.3.4 =
+* Added accessible names and screen-reader status messages to avatar controls.
+* Improved recovery when a saved local image is no longer available.
+* Clicking an empty Local avatar opens the Media Library.
+* Confirmed local avatars work through standard WordPress REST API avatar URLs.
 
 = 1.3.3 =
 * Tested with WordPress 7.1.

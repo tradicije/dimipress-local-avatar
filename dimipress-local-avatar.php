@@ -3,7 +3,7 @@
  * Plugin Name: DimiPress Local Avatar
  * Description: Lets users choose a local Media Library image as their WordPress profile avatar.
  * Plugin URI: https://dimitrium.org/en/dimipress/local-avatar
- * Version: 1.3.3
+ * Version: 1.3.4
  * Requires at least: 6.4
  * Requires PHP: 7.4
  * Author: Aleksa Dimitrijević
@@ -17,7 +17,8 @@
 defined( 'ABSPATH' ) || exit;
 
 final class Dimipress_Local_Avatar {
-	const VERSION = '1.3.3';
+	const VERSION = '1.3.4';
+	const ASSET_VERSION = '1.3.4.2';
 	const META_KEY = '_dimipress_local_avatar_id';
 	const SOURCE_META_KEY = '_dimipress_avatar_source';
 
@@ -38,21 +39,23 @@ final class Dimipress_Local_Avatar {
 			'dimipress-local-avatar',
 			plugin_dir_url( __FILE__ ) . 'assets/profile.js',
 			array( 'jquery' ),
-			self::VERSION,
+			self::ASSET_VERSION,
 			true
 		);
 		wp_enqueue_style(
 			'dimipress-local-avatar',
 			plugin_dir_url( __FILE__ ) . 'assets/profile.css',
 			array(),
-			self::VERSION
+			self::ASSET_VERSION
 		);
 		wp_localize_script(
 			'dimipress-local-avatar',
 			'dimipressLocalAvatar',
 			array(
-				'title'  => __( 'Choose profile image', 'dimipress-local-avatar' ),
-				'button' => __( 'Use as local avatar', 'dimipress-local-avatar' ),
+				'title'         => __( 'Choose profile image', 'dimipress-local-avatar' ),
+				'button'        => __( 'Use as local avatar', 'dimipress-local-avatar' ),
+				'localSelected' => __( 'Local avatar selected.', 'dimipress-local-avatar' ),
+				'localRemoved'  => __( 'Local avatar removed. Gravatar selected.', 'dimipress-local-avatar' ),
 			)
 		);
 	}
@@ -62,8 +65,9 @@ final class Dimipress_Local_Avatar {
 			return $description;
 		}
 		$attachment_id = (int) get_user_meta( $user->ID, self::META_KEY, true );
-		$image_url     = $attachment_id ? wp_get_attachment_image_url( $attachment_id, 'thumbnail' ) : '';
-		$source        = $this->avatar_source( $user->ID );
+		$image_url     = $this->local_avatar_image_url( $attachment_id, 'thumbnail' );
+		$attachment_id = $image_url ? $attachment_id : 0;
+		$source        = $attachment_id ? $this->avatar_source( $user->ID ) : 'gravatar';
 		$gravatar_hash = hash( 'sha256', strtolower( trim( $user->user_email ) ) );
 		$gravatar_url  = 'https://www.gravatar.com/avatar/' . $gravatar_hash . '?s=96&d=mp';
 		ob_start();
@@ -72,10 +76,10 @@ final class Dimipress_Local_Avatar {
 			<input type="hidden" id="dimipress_local_avatar_id" name="dimipress_local_avatar_id" value="<?php echo esc_attr( $attachment_id ); ?>">
 			<input type="hidden" id="dimipress_avatar_source" name="dimipress_avatar_source" value="<?php echo esc_attr( $source ); ?>">
 			<div class="dimipress-local-avatar-options">
-				<button type="button" class="dimipress-local-avatar-option" data-avatar-source="gravatar" aria-pressed="<?php echo esc_attr( 'gravatar' === $source ? 'true' : 'false' ); ?>">
+				<button type="button" class="dimipress-local-avatar-option" data-avatar-source="gravatar" aria-label="<?php esc_attr_e( 'Select Gravatar', 'dimipress-local-avatar' ); ?>" aria-pressed="<?php echo esc_attr( 'gravatar' === $source ? 'true' : 'false' ); ?>">
 					<img src="<?php echo esc_url( $gravatar_url ); ?>" alt="" width="96" height="96">
 				</button>
-				<button type="button" class="dimipress-local-avatar-option dimipress-local-avatar-local" data-avatar-source="local" aria-pressed="<?php echo esc_attr( 'local' === $source ? 'true' : 'false' ); ?>">
+				<button type="button" class="dimipress-local-avatar-option dimipress-local-avatar-local" data-avatar-source="local" aria-label="<?php esc_attr_e( 'Select local avatar', 'dimipress-local-avatar' ); ?>" aria-pressed="<?php echo esc_attr( 'local' === $source ? 'true' : 'false' ); ?>">
 				<?php if ( $image_url ) : ?>
 					<img src="<?php echo esc_url( $image_url ); ?>" alt="" width="96" height="96">
 				<?php else : ?>
@@ -93,6 +97,7 @@ final class Dimipress_Local_Avatar {
 				<button type="button" class="button dimipress-local-avatar-select"><?php esc_html_e( 'Choose local image', 'dimipress-local-avatar' ); ?></button>
 				<button type="button" class="button dimipress-local-avatar-remove" <?php disabled( ! $attachment_id ); ?>><?php esc_html_e( 'Remove saved local image', 'dimipress-local-avatar' ); ?></button>
 			</div>
+			<p class="screen-reader-text" aria-live="polite" aria-atomic="true" id="dimipress_local_avatar_status"></p>
 			<p class="description"><?php esc_html_e( 'Switch between Gravatar and your local image at any time. Your local image remains saved when Gravatar is selected.', 'dimipress-local-avatar' ); ?></p>
 		</div><p class="description">
 		<?php
@@ -113,12 +118,12 @@ final class Dimipress_Local_Avatar {
 			update_user_meta( $user_id, self::SOURCE_META_KEY, 'gravatar' );
 			return;
 		}
-		if (
-			'attachment' !== get_post_type( $attachment_id ) ||
-			'trash' === get_post_status( $attachment_id ) ||
-			! wp_attachment_is_image( $attachment_id ) ||
-			! current_user_can( 'edit_post', $attachment_id )
-		) {
+		if ( ! $this->has_valid_local_avatar_attachment( $attachment_id ) ) {
+			delete_user_meta( $user_id, self::META_KEY );
+			update_user_meta( $user_id, self::SOURCE_META_KEY, 'gravatar' );
+			return;
+		}
+		if ( ! current_user_can( 'edit_post', $attachment_id ) ) {
 			return;
 		}
 		update_user_meta( $user_id, self::META_KEY, $attachment_id );
@@ -131,11 +136,11 @@ final class Dimipress_Local_Avatar {
 			return $args;
 		}
 		$attachment_id = (int) get_user_meta( $user->ID, self::META_KEY, true );
-		if ( 'local' !== $this->avatar_source( $user->ID ) || ! $attachment_id || ! wp_attachment_is_image( $attachment_id ) ) {
+		if ( 'local' !== $this->avatar_source( $user->ID ) || ! $attachment_id ) {
 			return $args;
 		}
 		$size = ! empty( $args['size'] ) ? (int) $args['size'] : 96;
-		$url  = wp_get_attachment_image_url( $attachment_id, array( $size, $size ) );
+		$url  = $this->local_avatar_image_url( $attachment_id, array( $size, $size ) );
 		if ( ! $url ) {
 			return $args;
 		}
@@ -150,6 +155,21 @@ final class Dimipress_Local_Avatar {
 			return $source;
 		}
 		return get_user_meta( $user_id, self::META_KEY, true ) ? 'local' : 'gravatar';
+	}
+
+	private function local_avatar_image_url( $attachment_id, $size ) {
+		if ( ! $this->has_valid_local_avatar_attachment( $attachment_id ) ) {
+			return '';
+		}
+
+		return wp_get_attachment_image_url( $attachment_id, $size );
+	}
+
+	private function has_valid_local_avatar_attachment( $attachment_id ) {
+		return $attachment_id &&
+			'attachment' === get_post_type( $attachment_id ) &&
+			'trash' !== get_post_status( $attachment_id ) &&
+			wp_attachment_is_image( $attachment_id );
 	}
 
 	private function resolve_user( $id_or_email ) {

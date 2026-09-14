@@ -2,6 +2,21 @@
 
 All notable changes to this project are documented here.
 
+## 1.3.4 - 2026-09-14
+
+### Accessibility
+
+- Added accessible names to the Gravatar and Local avatar selection buttons.
+- Added screen-reader status messages after selecting or removing a local avatar.
+
+### Reliability
+
+- Fall back to Gravatar in the profile interface when a saved local image is no longer available.
+- Clear stale local-avatar metadata when the profile is next saved.
+- Open the Media Library when an empty Local avatar choice is selected.
+- Confirmed local avatars are returned through standard WordPress REST API avatar URLs.
+- Matched the source switch corner radius to WordPress action buttons.
+
 ## 1.3.3 - 2026-09-14
 
 - Confirmed compatibility with WordPress 7.1 and PHP 8.3.

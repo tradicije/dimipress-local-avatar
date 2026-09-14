@@ -14,7 +14,8 @@ Choose a WordPress Media Library image as a user's profile avatar, with an easy 
 - Choose between a local avatar and Gravatar directly in WordPress's built-in **Profile Picture** section.
 - Keep a selected local image while temporarily switching back to Gravatar.
 - Remove the avatar setting without deleting the original Media Library attachment.
-- Use local avatars anywhere WordPress uses the standard `get_avatar()` API.
+- Use local avatars anywhere WordPress uses the standard `get_avatar()` API, including REST API `avatar_urls`.
+- Accessible avatar controls with keyboard support and screen-reader feedback.
 - No theme, host, remote service, or site-specific dependency.
 
 ## Screenshots
@@ -42,6 +43,8 @@ Choose a WordPress Media Library image as a user's profile avatar, with an easy 
 5. Click **Update Profile** to save.
 
 Switching to Gravatar preserves the chosen local image for later. **Remove saved local image** clears only the avatar setting; the Media Library file is never deleted.
+
+If a saved local image has been deleted, trashed, or is no longer a valid image, the profile screen falls back to Gravatar. The stale avatar setting is cleared the next time the profile is saved.
 
 ## Requirements
 
