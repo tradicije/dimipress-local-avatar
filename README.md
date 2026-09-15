@@ -51,6 +51,10 @@ If a saved local image has been deleted, trashed, or is no longer a valid image,
 - WordPress 6.4 or newer
 - PHP 7.4 or newer
 
+## AI-assisted development
+
+Parts of this project's code were written with the assistance of AI coding tools, including OpenAI Codex. AI-generated changes are reviewed, tested, and adapted before being included in the project. The project's design, requirements, maintenance, and final technical decisions remain human-directed.
+
 ## Development and security
 
 - [Contributing guide](CONTRIBUTING.md)
